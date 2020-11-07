@@ -24,6 +24,8 @@ struct association {
 #pragma pack(push, 1)
 struct wireless {
     uint16_t cap;
+    uint16_t li;
+    uint8_t ssid[2];
 };
 #pragma(pop)
 

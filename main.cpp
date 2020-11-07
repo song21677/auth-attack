@@ -56,6 +56,9 @@ int send_deauthpacket(char *dev, char *apmac, char *stmac, int argc) {
     packet2.assoc.source = Mac(stmac);
     packet2.assoc.bssid = Mac(apmac);
     packet2.wireles.cap = 0x00;
+    packet2.wireles.li = 0x00;
+    uint8_t ssid[2] = {0x00,};
+    memcpy(packet2.wireles.ssid, ssid, 2);
 
     while (true) {
             int res = pcap_sendpacket(handle, reinterpret_cast<const u_char *>(&packet), sizeof(authpacket));
